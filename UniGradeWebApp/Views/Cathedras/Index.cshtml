@@ -1,0 +1,42 @@
+﻿@model IEnumerable<UniGradeWebApp.Cathedra>
+
+@{
+    ViewData["Title"] = "Кафедри за факультетом";
+}
+
+<h1>Кафедри за факультетом @ViewBag.FacName</h1>
+
+<p>
+    @*<a asp-action="Create" asp-route-id="@ViewBag.FacId">Додати нову кафедру</a>*@
+    @Html.ActionLink("Додати нову кафедру", "Create", new {FacId = @ViewBag.FacId})
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CathName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CathFacNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CathName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CathFacNavigation.FacId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CathId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CathId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CathId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<UniGradeWebApp.Grade>
+
+@{
+    ViewData["Title"] = "Бали студента";
+}
+
+<h1>Бали студента @ViewBag.StnFullName</h1>
+
+<p>
+    <a asp-action="Create" asp-route-id="@ViewBag.StnId">Додати новий бал</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GrdResult)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GrdSbjNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GrdStnNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrdResult)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrdSbjNavigation.SbjId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrdStnNavigation.StnId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GrdId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GrdId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GrdId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

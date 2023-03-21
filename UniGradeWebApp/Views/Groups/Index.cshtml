@@ -1,0 +1,47 @@
+﻿@model IEnumerable<UniGradeWebApp.Group>
+
+@{
+    ViewData["Title"] = "Групи за кафедрою";
+}
+
+<h1>Групи за кафедрою @ViewBag.CathName </h1>
+
+<p>
+    <a asp-action="Create" asp-route-id="@ViewBag.CathId">Додати нову групу</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GrpName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GrpEnrollmentYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GrpCathNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrpName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrpEnrollmentYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GrpCathNavigation.CathId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GrpId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GrpId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GrpId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
