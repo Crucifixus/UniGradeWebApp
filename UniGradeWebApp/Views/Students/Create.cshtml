@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Додавання студента до групи @ViewBag.GrpName</h1>
 
 <h4>Student</h4>
 <hr />
@@ -17,10 +17,7 @@
                 <input asp-for="StnFullName" class="form-control" />
                 <span asp-validation-for="StnFullName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StnGrp" class="control-label"></label>
-                <select asp-for="StnGrp" class ="form-control" asp-items="ViewBag.StnGrp"></select>
-            </div>
+            <input type="hidden" value="@ViewBag.GrpId" name="GrpId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

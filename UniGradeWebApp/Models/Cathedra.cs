@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 namespace UniGradeWebApp;
 
 public partial class Cathedra
@@ -12,7 +11,7 @@ public partial class Cathedra
     [Required(ErrorMessage = "Власна назва не повинна бути порожньою")]
     [Display(Name = "Кафедра")]
     public string CathName { get; set; } = null!;
-    //[Required(ErrorMessage = "Назва факультету не повинна бути порожньою"), ForeignKey("Faculty")]
+    //[Required(ErrorMessage = "ID факультету не повинна бути порожньою"), ForeignKey("Faculty")]
     //[Display(Name = "Факультети кафедри")]
     public int CathFac { get; set; }
 

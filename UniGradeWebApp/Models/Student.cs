@@ -7,7 +7,7 @@ namespace UniGradeWebApp;
 public partial class Student
 {
     public int StnId { get; set; }
-    [Required(ErrorMessage = "Поле не повинно бути порожнім")]
+    [Required(ErrorMessage = "ПІБ студента не повинен бути порожнім")]
     [Display(Name = "ПІБ")]
     public string StnFullName { get; set; } = null!;
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]

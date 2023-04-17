@@ -19,10 +19,15 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Subjects
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id, string? name)
         {
-            var dbUniGradeSystemContext = _context.Subjects.Include(s => s.SbjCathNavigation);
-            return View(await dbUniGradeSystemContext.ToListAsync());
+            if (id == null)
+                return RedirectToAction("Cathedras", "Index");
+            ViewBag.CathId = id;
+            ViewBag.CathName = name;
+            //var dbUniGradeSystemContext = _context.Subjects.Include(s => s.SbjCathNavigation);
+            var subjectsByCathedra = _context.Subjects.Where(s => s.SbjCath == id).Include(s => s.SbjCathNavigation);
+            return View(await subjectsByCathedra.ToListAsync());
         }
 
         // GET: Subjects/Details/5
@@ -45,9 +50,12 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Subjects/Create
-        public IActionResult Create()
+        public IActionResult Create(int CathId)
         {
-            ViewData["SbjCath"] = new SelectList(_context.Cathedras, "CathId", "CathName");
+            //ViewData["SbjCath"] = new SelectList(_context.Cathedras, "CathId", "CathName");
+            ViewBag.CathId = CathId;
+            ViewBag.Cathedra = _context.Cathedras.Where(f => f.CathId == CathId).FirstOrDefault();
+            ViewBag.CathName = ViewBag.Cathedra.CathName;
             return View();
         }
 
@@ -56,15 +64,17 @@ namespace UniGradeWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SbjId,SbjName,SbjCath,SbjTeach")] Subject subject)
+        public async Task<IActionResult> Create(int CathId, [Bind("SbjId,SbjName,SbjCath,SbjTeach")] Subject subject)
         {
+            subject.SbjCath = CathId;
+            var cath = ViewBag.Cathedra = _context.Cathedras.Where(f => f.CathId == CathId).FirstOrDefault();
             if (ModelState.IsValid)
             {
                 _context.Add(subject);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Subjects", new { id = CathId, name = cath.CathName });
             }
-            ViewData["SbjCath"] = new SelectList(_context.Cathedras, "CathId", "CathName", subject.SbjCath);
+            //ViewData["SbjCath"] = new SelectList(_context.Cathedras, "CathId", "CathName", subject.SbjCath);
             return View(subject);
         }
 

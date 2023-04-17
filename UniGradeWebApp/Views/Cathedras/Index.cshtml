@@ -29,11 +29,9 @@
                 @Html.DisplayFor(modelItem => item.CathName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CathFacNavigation.FacId)
-            </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.CathId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CathId">Details</a> |
+                <a asp-action="Details2" asp-route-id="@item.CathId">Details2</a> |
                 <a asp-action="Delete" asp-route-id="@item.CathId">Delete</a>
             </td>
         </tr>

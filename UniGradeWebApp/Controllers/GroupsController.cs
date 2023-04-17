@@ -49,13 +49,16 @@ namespace UniGradeWebApp.Controllers
             }
 
             //return View(@group);
-            return RedirectToAction("Index", "Students", new {GrpId = group.GrpId, GrpName = group.GrpName, GrpEnrollmentYear = group.GrpEnrollmentYear});
+            return RedirectToAction("Index", "Students", new {id = group.GrpId, name = group.GrpName, enrollmentyear = group.GrpEnrollmentYear});
         }
 
         // GET: Groups/Create
-        public IActionResult Create()
+        public IActionResult Create(int CathId)
         {
-            ViewData["GrpCath"] = new SelectList(_context.Cathedras, "CathId", "CathId");
+            //ViewData["GrpCath"] = new SelectList(_context.Cathedras, "CathId", "CathId");
+            ViewBag.CathId = CathId;
+            ViewBag.Cathedra = _context.Cathedras.Where(f => f.CathId == CathId).FirstOrDefault();
+            ViewBag.CathName = ViewBag.Cathedra.CathName;
             return View();
         }
 
@@ -64,16 +67,18 @@ namespace UniGradeWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GrpId,GrpName,GrpEnrollmentYear,GrpCath")] Group @group)
+        public async Task<IActionResult> Create(int CathId, [Bind("GrpId,GrpName,GrpEnrollmentYear,GrpCath")] Group @group)
         {
+            group.GrpCath = CathId;
+            var cath = ViewBag.Cathedra = _context.Cathedras.Where(f => f.CathId == CathId).FirstOrDefault();
             if (ModelState.IsValid)
             {
                 _context.Add(@group);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Groups", new { id = CathId, name = cath.CathName });
             }
-            ViewData["GrpCath"] = new SelectList(_context.Cathedras, "CathId", "CathId", @group.GrpCath);
-            return View(@group);
+            //ViewData["GrpCath"] = new SelectList(_context.Cathedras, "CathId", "CathId", @group.GrpCath);
+            return View(group);
         }
 
         // GET: Groups/Edit/5

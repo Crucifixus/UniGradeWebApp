@@ -1,13 +1,14 @@
 ﻿@model IEnumerable<UniGradeWebApp.Subject>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Предмети за кафедрою";
 }
 
-<h1>Index</h1>
+<h1>Предмети за кафедрою @ViewBag.CathName </h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @*<a asp-action="Create">Create New</a>*@
+    @Html.ActionLink("Додати новий предмет", "Create", new {CathId = @ViewBag.CathId})
 </p>
 <table class="table">
     <thead>

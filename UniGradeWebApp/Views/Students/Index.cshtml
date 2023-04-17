@@ -7,16 +7,14 @@
 <h1>Студенти за групою @ViewBag.GrpName @ViewBag.GrpEnrollmentYear</h1>
 
 <p>
-    <a asp-action="Create" asp-route-id="@ViewBag.GrpId">Додати нового студента</a>
+    @*<a asp-action="Create" asp-route-id="@ViewBag.GrpId">Додати нового студента</a>*@
+    @Html.ActionLink("Додати нового студента", "Create", new {GrpId = @ViewBag.GrpId})
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.StnFullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StnGrpNavigation)
             </th>
             <th></th>
         </tr>
@@ -26,9 +24,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.StnFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StnGrpNavigation.GrpId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.StnId">Edit</a> |

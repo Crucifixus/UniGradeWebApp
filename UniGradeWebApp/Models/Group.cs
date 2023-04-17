@@ -7,10 +7,10 @@ namespace UniGradeWebApp;
 public partial class Group
 {
     public int GrpId { get; set; }
-    [Required(ErrorMessage = "Поле не повинно бути порожнім")]
+    [Required(ErrorMessage = "Назва групи не повинна бути порожньою")]
     [Display(Name = "Група")]
     public string GrpName { get; set; } = null!;
-    [Required(ErrorMessage = "Поле не повинно бути порожнім")]
+    [Required(ErrorMessage = "Рік вступу групи не повинен бути порожнім")]
     [Display(Name = "Рік вступу")]
     public short GrpEnrollmentYear { get; set; }
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]

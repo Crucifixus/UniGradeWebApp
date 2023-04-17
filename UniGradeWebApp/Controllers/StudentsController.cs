@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -48,13 +49,16 @@ namespace UniGradeWebApp.Controllers
             }
 
             //return View(student);
-            return RedirectToAction("Index", "Grades", new {StnId = student.StnId, StnFullName = student.StnFullName});
+            return RedirectToAction("Index", "Grades", new {id = student.StnId, name = student.StnFullName});
         }
 
         // GET: Students/Create
-        public IActionResult Create()
+        public IActionResult Create(int GrpId)
         {
-            ViewData["StnGrp"] = new SelectList(_context.Groups, "GrpId", "GrpId");
+            //ViewData["StnGrp"] = new SelectList(_context.Groups, "GrpId", "GrpId");
+            ViewBag.GrpId = GrpId;
+            ViewBag.Group = _context.Groups.Where(f => f.GrpId == GrpId).FirstOrDefault();
+            ViewBag.GrpName = ViewBag.Group.GrpName;
             return View();
         }
 
@@ -63,15 +67,17 @@ namespace UniGradeWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StnId,StnFullName,StnGrp")] Student student)
+        public async Task<IActionResult> Create(int GrpId, [Bind("StnId,StnFullName,StnGrp")] Student student)
         {
+            student.StnGrp = GrpId;
+            var grp = _context.Groups.Where(f => f.GrpId == GrpId).FirstOrDefault();
             if (ModelState.IsValid)
             {
                 _context.Add(student);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Students", new { id = GrpId, name = grp.GrpName, enrollmentyear = grp.GrpEnrollmentYear });
             }
-            ViewData["StnGrp"] = new SelectList(_context.Groups, "GrpId", "GrpId", student.StnGrp);
+            //ViewData["StnGrp"] = new SelectList(_context.Groups, "GrpId", "GrpId", student.StnGrp);
             return View(student);
         }
 

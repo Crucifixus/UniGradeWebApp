@@ -26,35 +26,41 @@ namespace UniGradeWebApp.Controllers
             ViewBag.StnId = id;
             ViewBag.StnFullName = name;
             //var dbUniGradeSystemContext = _context.Grades.Include(g => g.GrdSbjNavigation).Include(g => g.GrdStnNavigation);
-            var gradesByStudents = _context.Grades.Where(g => g.GrdStn == id).Include(g => g.GrdStnNavigation);
+            var gradesByStudents = _context.Grades.Where(g => g.GrdStn == id).Include(g => g.GrdStnNavigation).Include(g => g.GrdSbjNavigation);
             return View(await gradesByStudents.ToListAsync());
         }
 
-        // GET: Grades/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Grades == null)
-            {
-                return NotFound();
-            }
-
-            var grade = await _context.Grades
-                .Include(g => g.GrdSbjNavigation)
-                .Include(g => g.GrdStnNavigation)
-                .FirstOrDefaultAsync(m => m.GrdId == id);
-            if (grade == null)
-            {
-                return NotFound();
-            }
-
-            return View(grade);
-        }
+        //// GET: Grades/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null || _context.Grades == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //
+        //    var grade = await _context.Grades
+        //        .Include(g => g.GrdSbjNavigation)
+        //        .Include(g => g.GrdStnNavigation)
+        //        .FirstOrDefaultAsync(m => m.GrdId == id);
+        //    if (grade == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //
+        //    //return View(grade);
+        //    return RedirectToAction("Index", "Grades", new { id = grade.GrdId, res = grade.GrdResult });
+        //}
 
         // GET: Grades/Create
-        public IActionResult Create()
+        public IActionResult Create(int StnId, int SbjId)
         {
-            ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjId");
-            ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnId");
+            ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjName");
+            //ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnId");
+            ViewBag.StnId = StnId;
+            ViewBag.Student = _context.Students.Where(f => f.StnId == StnId).FirstOrDefault();
+            //ViewBag.SbjId = SbjId;
+            //ViewBag.Subject = _context.Subjects.Where(f => f.SbjId == SbjId).FirstOrDefault();
+            ViewBag.StnName = ViewBag.Student.StnFullName;
             return View();
         }
 
@@ -63,16 +69,23 @@ namespace UniGradeWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GrdId,GrdSbj,GrdStn,GrdResult")] Grade grade)
+        public async Task<IActionResult> Create(int StnId, /*int SbjId,*/ [Bind("GrdId,GrdSbj,GrdStn,GrdResult")] Grade grade)
         {
+            grade.GrdStn = StnId;
+            int? sbj_id = ViewBag.GrdSbj;
+            //if (sbj_id == null)
+            //{
+            //    throw new Exception("God why you give me your hardest trials?");
+            //}
+            var stn = _context.Students.Where(f => f.StnId == StnId).FirstOrDefault();
             if (ModelState.IsValid)
             {
                 _context.Add(grade);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Grades", new { id = StnId, name = stn.StnFullName/*, sbj = _context.Subjects.Where(f => f.SbjId == sbj_id).FirstOrDefault() */});
             }
-            ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjId", grade.GrdSbj);
-            ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnId", grade.GrdStn);
+            //ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjId", grade.GrdSbj);
+            //ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnId", grade.GrdStn);
             return View(grade);
         }
 

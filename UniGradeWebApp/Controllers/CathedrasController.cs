@@ -29,7 +29,6 @@ namespace UniGradeWebApp.Controllers
             ViewBag.FacFoundingYear = foundingyear;
             //var dbUniGradeSystemContext = _context.Cathedras.Include(c => c.CathFacNavigation);
             var cathedrasByFaculty = _context.Cathedras.Where(c => c.CathFac == id).Include(c => c.CathFacNavigation);
-            //.Include(c => c.Faculty) can't do that as don't have c.Faculty, and idk what else would be correct
 
             return View(await cathedrasByFaculty.ToListAsync());
         }
@@ -52,8 +51,30 @@ namespace UniGradeWebApp.Controllers
 
             //return View(cathedra);
             //return RedirectToAction("Index", "Subjects", new { CathId = cathedra.CathId, CathName = cathedra.CathName });
-            //How to do 2 redirects?
-            return RedirectToAction("Index", "Groups", new { CathId = cathedra.CathId, CathName = cathedra.CathName });
+            //How to do 2 redirects? answ, you don't, you make 2 buttons TODO: make a second list, which would be of subjects instead of groups
+            return RedirectToAction("Index", "Groups", new { id = cathedra.CathId, name = cathedra.CathName });
+        }
+
+        // GET: Cathedras/Details2/5
+        public async Task<IActionResult> Details2(int? id)
+        {
+            if (id == null || _context.Cathedras == null)
+            {
+                return NotFound();
+            }
+
+            var cathedra = await _context.Cathedras
+                .Include(c => c.CathFacNavigation)
+                .FirstOrDefaultAsync(m => m.CathId == id);
+            if (cathedra == null)
+            {
+                return NotFound();
+            }
+
+            //return View(cathedra);
+            return RedirectToAction("Index", "Subjects", new { id = cathedra.CathId, name = cathedra.CathName });
+            //How to do 2 redirects? answ, you don't, you make 2 buttons TODO: make a second list, which would be of subjects instead of groups
+            //return RedirectToAction("Index", "Groups", new { id = cathedra.CathId, name = cathedra.CathName });
         }
 
         // GET: Cathedras/Create
@@ -62,7 +83,7 @@ namespace UniGradeWebApp.Controllers
             //ViewData["FacId"] = new SelectList(_context.Faculties, "FacId", "FacId");
             ViewBag.FacId = FacId;
             ViewBag.Faculty = _context.Faculties.Where(f => f.FacId == FacId).FirstOrDefault();
-            ViewBag.FacName = _context.Faculties.Where(f => f.FacId == FacId).FirstOrDefault().FacName;
+            ViewBag.FacName = ViewBag.Faculty.FacName;
             return View();
         }
 
@@ -71,21 +92,19 @@ namespace UniGradeWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int FacId, Faculty CathFacNavigation, [Bind("CathId,CathName")] Cathedra cathedra)
+        public async Task<IActionResult> Create(int FacId, [Bind("CathId,CathName")] Cathedra cathedra)
         {
             cathedra.CathFac = FacId;
-            //cathedra.CathFacNavigation = CathFacNavigation;
-            //var fac = _context.Faculties.Where(f => f.FacId == FacId).FirstOrDefault();
-            ModelState.ClearValidationState(nameof(Cathedra));
-            if (!TryValidateModel(cathedra, nameof(Cathedra))) 
-            { }
-            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            var fac = _context.Faculties.Where(f => f.FacId == FacId).FirstOrDefault();
+            //ModelState.ClearValidationState(nameof(Cathedra));
+            //if (!TryValidateModel(cathedra, nameof(Cathedra))) 
+            //{ }
+            //IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
                 _context.Add(cathedra);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-                //return RedirectToAction("Index", "Cathedras", new { id = FacId, name = fac.FacName, foundingyear = fac.FacFoundingYear } );
+                return RedirectToAction("Index", "Cathedras", new { id = FacId, name = fac.FacName, foundingyear = fac.FacFoundingYear } );
             }
             //ViewData["FacId"] = new SelectList(_context.Faculties, "FacId", "FacId", cathedra.FacId);
             return View(cathedra);           
