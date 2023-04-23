@@ -52,6 +52,8 @@ namespace UniGradeWebApp.Controllers
             //return View(cathedra);
             //return RedirectToAction("Index", "Subjects", new { CathId = cathedra.CathId, CathName = cathedra.CathName });
             //How to do 2 redirects? answ, you don't, you make 2 buttons TODO: make a second list, which would be of subjects instead of groups
+            ViewBag.FacId = cathedra.CathFac;
+            ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
             return RedirectToAction("Index", "Groups", new { id = cathedra.CathId, name = cathedra.CathName });
         }
 
@@ -72,8 +74,9 @@ namespace UniGradeWebApp.Controllers
             }
 
             //return View(cathedra);
+            ViewBag.FacId = cathedra.CathFac;
+            ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
             return RedirectToAction("Index", "Subjects", new { id = cathedra.CathId, name = cathedra.CathName });
-            //How to do 2 redirects? answ, you don't, you make 2 buttons TODO: make a second list, which would be of subjects instead of groups
             //return RedirectToAction("Index", "Groups", new { id = cathedra.CathId, name = cathedra.CathName });
         }
 
@@ -123,6 +126,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
+            ViewBag.FacId = cathedra.CathFac;
+            ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
             ViewData["CathFac"] = new SelectList(_context.Faculties, "FacId", "FacId", cathedra.CathFac);
             return View(cathedra);
         }
@@ -159,6 +164,8 @@ namespace UniGradeWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.FacId = cathedra.CathFac;
+            ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
             ViewData["CathFac"] = new SelectList(_context.Faculties, "FacId", "FacId", cathedra.CathFac);
             return View(cathedra);
         }
@@ -178,7 +185,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.FacId = cathedra.CathFac;
+            ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
             return View(cathedra);
         }
 

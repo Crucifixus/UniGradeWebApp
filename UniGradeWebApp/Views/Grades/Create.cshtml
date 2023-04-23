@@ -6,7 +6,7 @@
 
 <h1>Додавання балу студента @ViewBag.StnName</h1>
 
-<h4>Grade</h4>
+<h4>Бал</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -23,16 +23,14 @@
             </div>
             <input type="hidden" value="@ViewBag.StnId" name="StnId" />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Створити" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
-        @*<input type="hidden" value="@ViewBag.StnId" name="id" />
-        <input type="hidden" value="@ViewBag.StnFullName" name="name" />*@
+    @Html.ActionLink("Назад до оцінок студента", "Index", new {id = @ViewBag.StnId, name = @ViewBag.StnFullName})
 </div>
 
 @section Scripts {

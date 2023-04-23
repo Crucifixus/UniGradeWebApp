@@ -11,10 +11,10 @@ public partial class Student
     [Display(Name = "ПІБ")]
     public string StnFullName { get; set; } = null!;
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]
-    [Display(Name = "Група")]
+    [Display(Name = "Айді групи")]
     public int StnGrp { get; set; }
-
+    [Display(Name = "Бал")]
     public virtual ICollection<Grade> Grades { get; } = new List<Grade>();
-
+    [Display(Name = "Група")]
     public virtual Group StnGrpNavigation { get; set; } = null!;
 }

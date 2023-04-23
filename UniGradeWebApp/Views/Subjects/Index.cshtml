@@ -7,7 +7,6 @@
 <h1>Предмети за кафедрою @ViewBag.CathName </h1>
 
 <p>
-    @*<a asp-action="Create">Create New</a>*@
     @Html.ActionLink("Додати новий предмет", "Create", new {CathId = @ViewBag.CathId})
 </p>
 <table class="table">
@@ -18,9 +17,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.SbjTeach)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SbjCathNavigation)
             </th>
             <th></th>
         </tr>
@@ -35,12 +31,9 @@
                 @Html.DisplayFor(modelItem => item.SbjTeach)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SbjCathNavigation.CathName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SbjId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SbjId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SbjId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.SbjId">Змінити</a> |
+                <a asp-action="Details" asp-route-id="@item.SbjId">Детальніше</a> |
+                <a asp-action="Delete" asp-route-id="@item.SbjId">Видалити</a>
             </td>
         </tr>
 }

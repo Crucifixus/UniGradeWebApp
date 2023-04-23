@@ -45,7 +45,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.CathId = subject.SbjCath;
+            ViewBag.CathName = subject.SbjCathNavigation.CathName;
             return View(subject);
         }
 
@@ -91,6 +92,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
+            ViewBag.CathId = subject.SbjCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == subject.SbjCath).FirstOrDefault().CathName;
             ViewData["SbjCath"] = new SelectList(_context.Cathedras, "CathId", "CathName", subject.SbjCath);
             return View(subject);
         }
@@ -127,6 +130,8 @@ namespace UniGradeWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.CathId = subject.SbjCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == subject.SbjCath).FirstOrDefault().CathName;
             ViewData["SbjCath"] = new SelectList(_context.Cathedras, "CathId", "CathName", subject.SbjCath);
             return View(subject);
         }
@@ -146,7 +151,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.CathId = subject.SbjCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == subject.SbjCath).FirstOrDefault().CathName;
             return View(subject);
         }
 

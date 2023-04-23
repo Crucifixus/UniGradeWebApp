@@ -20,13 +20,13 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index(int? id, string? name, short? enrollyear)
+        public async Task<IActionResult> Index(int? id, string? name, short? enrollmentyear)
         {
             if (id == null)
                 return RedirectToAction("Groups", "Index");
             ViewBag.GrpId = id;
             ViewBag.GrpName = name;
-            ViewBag.GrpEnrollmentYear = enrollyear;
+            ViewBag.GrpEnrollmentYear = enrollmentyear;
             //var dbUniGradeSystemContext = _context.Students.Include(s => s.StnGrpNavigation);
             var studentsByGroup = _context.Students.Where(s => s.StnGrp == id).Include(s => s.StnGrpNavigation);
             return View(await studentsByGroup.ToListAsync());
@@ -49,6 +49,9 @@ namespace UniGradeWebApp.Controllers
             }
 
             //return View(student);
+            ViewBag.GrpId = student.StnGrp;
+            ViewBag.GrpName = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpName;
+            ViewBag.GrpEnrollmentYear = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpEnrollmentYear;
             return RedirectToAction("Index", "Grades", new {id = student.StnId, name = student.StnFullName});
         }
 
@@ -57,8 +60,9 @@ namespace UniGradeWebApp.Controllers
         {
             //ViewData["StnGrp"] = new SelectList(_context.Groups, "GrpId", "GrpId");
             ViewBag.GrpId = GrpId;
-            ViewBag.Group = _context.Groups.Where(f => f.GrpId == GrpId).FirstOrDefault();
-            ViewBag.GrpName = ViewBag.Group.GrpName;
+            var grp = _context.Groups.Where(f => f.GrpId == GrpId).FirstOrDefault();
+            ViewBag.GrpName = grp.GrpName;
+            ViewBag.GrpEnrollmentYear = grp.GrpEnrollmentYear;
             return View();
         }
 
@@ -94,6 +98,9 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
+            ViewBag.GrpId = student.StnGrp;
+            ViewBag.GrpName = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpName;
+            ViewBag.GrpEnrollmentYear = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpEnrollmentYear;
             ViewData["StnGrp"] = new SelectList(_context.Groups, "GrpId", "GrpId", student.StnGrp);
             return View(student);
         }
@@ -130,6 +137,9 @@ namespace UniGradeWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.GrpId = student.StnGrp;
+            ViewBag.GrpName = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpName;
+            ViewBag.GrpEnrollmentYear = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpEnrollmentYear;
             ViewData["StnGrp"] = new SelectList(_context.Groups, "GrpId", "GrpId", student.StnGrp);
             return View(student);
         }
@@ -149,7 +159,9 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.GrpId = student.StnGrp;
+            ViewBag.GrpName = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpName;
+            ViewBag.GrpEnrollmentYear = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpEnrollmentYear;
             return View(student);
         }
 

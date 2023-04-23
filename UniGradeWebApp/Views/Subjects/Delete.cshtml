@@ -4,11 +4,11 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<h1>Видалення</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Ви впевнені що хочете видалити цю дисципліну?</h3>
 <div>
-    <h4>Subject</h4>
+    <h4>Дисципліна</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -33,7 +33,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="SbjId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Видалити" class="btn btn-danger" /> |
+        @Html.ActionLink("Назад до дисциплін кафедри", "Index", new {id = @ViewBag.CathId, name = @ViewBag.CathName})
     </form>
 </div>

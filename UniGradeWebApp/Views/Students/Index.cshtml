@@ -4,7 +4,7 @@
     ViewData["Title"] = "Студенти за групою";
 }
 
-<h1>Студенти за групою @ViewBag.GrpName @ViewBag.GrpEnrollmentYear</h1>
+<h1>Студенти за групою @ViewBag.GrpName, @ViewBag.GrpEnrollmentYear року</h1>
 
 <p>
     @*<a asp-action="Create" asp-route-id="@ViewBag.GrpId">Додати нового студента</a>*@
@@ -26,9 +26,9 @@
                 @Html.DisplayFor(modelItem => item.StnFullName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.StnId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.StnId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.StnId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.StnId">Змінити</a> |
+                    <a asp-action="Details" asp-route-id="@item.StnId">Бали</a> |
+                <a asp-action="Delete" asp-route-id="@item.StnId">Видалити</a>
             </td>
         </tr>
 }

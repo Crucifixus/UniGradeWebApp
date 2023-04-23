@@ -1,4 +1,4 @@
-﻿@model UniGradeWebApp.Grade
+﻿@*@model UniGradeWebApp.Grade
 
 @{
     ViewData["Title"] = "Details";
@@ -32,5 +32,6 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.GrdId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Назад до оцінок студента", "Index", new {id = @ViewBag.StnId, name = @ViewBag.StnFullName})
 </div>
+*@

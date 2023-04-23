@@ -12,6 +12,6 @@ public partial class Faculty
     public string FacName { get; set; } = null!;
     [Display(Name = "Рік заснування факультету")]
     public short? FacFoundingYear { get; set; }
-
+    [Display(Name = "Кафедра")]
     public virtual ICollection<Cathedra> Cathedras { get; } = new List<Cathedra>();
 }

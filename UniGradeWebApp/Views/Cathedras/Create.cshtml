@@ -6,7 +6,7 @@
 
 <h1>Додавання кафедри до факультету @ViewBag.FacName</h1>
 
-<h4>Cathedra</h4>
+<h4>Кафедра</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,14 +19,14 @@
             </div>
             <input type="hidden" value="@ViewBag.FacId" name="FacId" />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Створити" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Назад до кафедр факультету", "Index", new {id = @ViewBag.FacId, name = @ViewBag.FacName})
 </div>
 
 @section Scripts {

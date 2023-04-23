@@ -14,10 +14,10 @@ public partial class Group
     [Display(Name = "Рік вступу")]
     public short GrpEnrollmentYear { get; set; }
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]
-    [Display(Name = "Кафедра")]
+    [Display(Name = "Айді кафедра")]
     public int GrpCath { get; set; }
-
+    [Display(Name = "Кафедра")]
     public virtual Cathedra GrpCathNavigation { get; set; } = null!;
-
+    [Display(Name = "Студент")]
     public virtual ICollection<Student> Students { get; } = new List<Student>();
 }

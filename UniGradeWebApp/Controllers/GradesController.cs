@@ -52,15 +52,13 @@ namespace UniGradeWebApp.Controllers
         //}
 
         // GET: Grades/Create
-        public IActionResult Create(int StnId, int SbjId)
+        public IActionResult Create(int StnId/*, int SbjId*/)
         {
             ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjName");
-            //ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnId");
             ViewBag.StnId = StnId;
-            ViewBag.Student = _context.Students.Where(f => f.StnId == StnId).FirstOrDefault();
+            ViewBag.StnFullName = _context.Students.Where(s => s.StnId == StnId).FirstOrDefault().StnFullName;
             //ViewBag.SbjId = SbjId;
             //ViewBag.Subject = _context.Subjects.Where(f => f.SbjId == SbjId).FirstOrDefault();
-            ViewBag.StnName = ViewBag.Student.StnFullName;
             return View();
         }
 
@@ -102,8 +100,10 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjId", grade.GrdSbj);
-            ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnId", grade.GrdStn);
+            ViewBag.StnId = grade.GrdStn;
+            ViewBag.StnFullName = _context.Students.Where(s => s.StnId == grade.GrdStn).FirstOrDefault().StnFullName;
+            ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjName", grade.GrdSbj);
+            ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnFullName", grade.GrdStn);
             return View(grade);
         }
 
@@ -139,8 +139,10 @@ namespace UniGradeWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjId", grade.GrdSbj);
-            ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnId", grade.GrdStn);
+            ViewBag.StnId = grade.GrdStn;
+            ViewBag.StnFullName = _context.Students.Where(s => s.StnId == grade.GrdStn).FirstOrDefault().StnFullName;
+            ViewData["GrdSbj"] = new SelectList(_context.Subjects, "SbjId", "SbjName", grade.GrdSbj);
+            ViewData["GrdStn"] = new SelectList(_context.Students, "StnId", "StnFullName", grade.GrdStn);
             return View(grade);
         }
 
@@ -160,7 +162,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.StnId = grade.GrdStn;
+            ViewBag.StnFullName = _context.Students.Where(s => s.StnId == grade.GrdStn).FirstOrDefault().StnFullName;
             return View(grade);
         }
 

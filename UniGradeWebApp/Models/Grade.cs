@@ -11,12 +11,12 @@ public partial class Grade
     [Display(Name = "Дисципліна")]
     public int GrdSbj { get; set; }
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]
-    [Display(Name = "Студент")]
+    [Display(Name = "Айді студента")]
     public int GrdStn { get; set; }
     [Display(Name = "Бал")]
     public byte? GrdResult { get; set; }
-
+    [Display(Name = "Предмет")]
     public virtual Subject GrdSbjNavigation { get; set; } = null!;
-
+    [Display(Name = "Студент")]
     public virtual Student GrdStnNavigation { get; set; } = null!;
 }

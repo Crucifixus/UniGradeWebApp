@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Змінення</h1>
 
-<h4>Grade</h4>
+<h4>Бал</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,24 +19,19 @@
                 <span asp-validation-for="GrdSbj" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="GrdStn" class="control-label"></label>
-                <select asp-for="GrdStn" class="form-control" asp-items="ViewBag.GrdStn"></select>
-                <span asp-validation-for="GrdStn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="GrdResult" class="control-label"></label>
                 <input asp-for="GrdResult" class="form-control" />
                 <span asp-validation-for="GrdResult" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Зберегти зміни" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Назад до оцінок студента", "Index", new {id = @ViewBag.StnId, name = @ViewBag.StnFullName})
 </div>
 
 @section Scripts {

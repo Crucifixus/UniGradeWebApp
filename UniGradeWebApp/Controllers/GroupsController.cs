@@ -49,6 +49,8 @@ namespace UniGradeWebApp.Controllers
             }
 
             //return View(@group);
+            ViewBag.CathId = group.GrpCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == group.GrpCath).FirstOrDefault().CathName;
             return RedirectToAction("Index", "Students", new {id = group.GrpId, name = group.GrpName, enrollmentyear = group.GrpEnrollmentYear});
         }
 
@@ -94,6 +96,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
+            ViewBag.CathId = group.GrpCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == group.GrpCath).FirstOrDefault().CathName;
             ViewData["GrpCath"] = new SelectList(_context.Cathedras, "CathId", "CathId", @group.GrpCath);
             return View(@group);
         }
@@ -130,6 +134,8 @@ namespace UniGradeWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.CathId = group.GrpCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == group.GrpCath).FirstOrDefault().CathName;
             ViewData["GrpCath"] = new SelectList(_context.Cathedras, "CathId", "CathId", @group.GrpCath);
             return View(@group);
         }
@@ -149,7 +155,8 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.CathId = group.GrpCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == group.GrpCath).FirstOrDefault().CathName;
             return View(@group);
         }
 

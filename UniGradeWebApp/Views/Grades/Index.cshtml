@@ -32,9 +32,8 @@
                 @Html.DisplayFor(modelItem => item.GrdSbjNavigation.SbjName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.GrdId">Edit</a> |
-               @* <a asp-action="Details" asp-route-id="@item.GrdId">Details</a> |*@
-                <a asp-action="Delete" asp-route-id="@item.GrdId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.GrdId">Змінити</a> |
+                <a asp-action="Delete" asp-route-id="@item.GrdId">Видалити</a>
             </td>
         </tr>
 }

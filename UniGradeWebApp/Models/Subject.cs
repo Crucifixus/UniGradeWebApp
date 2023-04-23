@@ -10,13 +10,13 @@ public partial class Subject
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]
     [Display(Name = "Дисципліна")]
     public string SbjName { get; set; } = null!;
-    [Display(Name = "Кафедра")]
+    [Display(Name = "Айді кафедри")]
     public int? SbjCath { get; set; }
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]
     [Display(Name = "Викладач")]
     public string SbjTeach { get; set; } = null!;
-
+    [Display(Name = "Бал")]
     public virtual ICollection<Grade> Grades { get; } = new List<Grade>();
-
+    [Display(Name = "Кафедра")]
     public virtual Cathedra? SbjCathNavigation { get; set; }
 }

@@ -4,10 +4,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Деталі</h1>
 
 <div>
-    <h4>Cathedra</h4>
+    <h4>Кафедра</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -20,11 +20,11 @@
             @Html.DisplayNameFor(model => model.CathFacNavigation)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CathFacNavigation.FacId)
+            @Html.DisplayFor(model => model.CathFacNavigation.FacName)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.CathId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.CathId">Змінити</a> |
+    @Html.ActionLink("Назад до кафедр факультету", "Index", new {id = @ViewBag.FacId, name = @ViewBag.FacName})
 </div>

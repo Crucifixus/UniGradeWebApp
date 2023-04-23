@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Змінення</h1>
 
-<h4>Cathedra</h4>
+<h4>Кафедра</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,19 +19,14 @@
                 <span asp-validation-for="CathName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CathFac" class="control-label"></label>
-                <select asp-for="CathFac" class="form-control" asp-items="ViewBag.CathFac"></select>
-                <span asp-validation-for="CathFac" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Зберегти зміни" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Назад до кафедр факультету", "Index", new {id = @ViewBag.FacId, name = @ViewBag.FacName})
 </div>
 
 @section Scripts {
