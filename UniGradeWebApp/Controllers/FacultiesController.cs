@@ -127,7 +127,7 @@ namespace UniGradeWebApp.Controllers
             }
 
             var faculty = await _context.Faculties
-                .FirstOrDefaultAsync(m => m.FacId == id);
+                .FirstOrDefaultAsync(f => f.FacId == id);
             if (faculty == null)
             {
                 return NotFound();
@@ -145,14 +145,18 @@ namespace UniGradeWebApp.Controllers
             {
                 return Problem("Entity set 'DbUniGradeSystemContext.Faculties'  is null.");
             }
-            var faculty = await _context.Faculties.FindAsync(id);
-            if (faculty != null)
+            var faculty = await _context.Faculties
+                .Include(f => f.Cathedras)
+                .FirstOrDefaultAsync(m => m.FacId == id); ;
+            if (faculty != null
+                && (faculty.Cathedras == null || faculty.Cathedras.Count == 0))
             {
                 _context.Faculties.Remove(faculty);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewBag.ErrMessage = "Елемент не повинен мати дочірніх.";
+            return View(faculty);
         }
 
         private bool FacultyExists(int id)

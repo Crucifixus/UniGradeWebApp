@@ -14,6 +14,7 @@ public partial class Grade
     [Display(Name = "Айді студента")]
     public int GrdStn { get; set; }
     [Display(Name = "Бал")]
+    [Range(0, 100)]
     public byte? GrdResult { get; set; }
     [Display(Name = "Предмет")]
     public virtual Subject GrdSbjNavigation { get; set; } = null!;

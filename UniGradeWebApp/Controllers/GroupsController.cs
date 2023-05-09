@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using UniGradeWebApp;
 
 namespace UniGradeWebApp.Controllers
@@ -19,15 +20,15 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Groups
-        public async Task<IActionResult> Index(int? id, string? name)
+        public async Task<IActionResult> Index(int? id, string? name, int? facid, string? facname)
         {
             if(id == null)
                 return RedirectToAction("Cathedras", "Index");
             ViewBag.CathId = id;
             ViewBag.CathName = name;
-            //var dbUniGradeSystemContext = _context.Groups.Include(g => g.GrpCathNavigation);
+            ViewBag.FacId = facid;
+            ViewBag.FacName = facname;
             var groupsByCathedra = _context.Groups.Where(g => g.GrpCath == id).Include(g => g.GrpCathNavigation);
-            //Same problem as before, I am clearly misunderstanding something
 
             return View(await groupsByCathedra.ToListAsync());
         }
@@ -169,14 +170,20 @@ namespace UniGradeWebApp.Controllers
             {
                 return Problem("Entity set 'DbUniGradeSystemContext.Groups'  is null.");
             }
-            var @group = await _context.Groups.FindAsync(id);
-            if (@group != null)
+            var @group = await _context.Groups
+                .Include(g => g.Students)
+                .FirstOrDefaultAsync(m => m.GrpId == id);
+            if (group != null
+                && (group.Students == null || group.Students.Count == 0))
             {
-                _context.Groups.Remove(@group);
+                _context.Groups.Remove(group);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewBag.ErrMessage = "Елемент не повинен мати дочірніх.";
+            ViewBag.CathId = group.GrpCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == group.GrpCath).FirstOrDefault().CathName;
+            return View(group);
         }
 
         private bool GroupExists(int id)

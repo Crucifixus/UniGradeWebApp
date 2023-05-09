@@ -9,6 +9,9 @@
 <p>
     @Html.ActionLink("Додати новий предмет", "Create", new {CathId = @ViewBag.CathId})
 </p>
+<p>
+    @Html.ActionLink("Повернутись до списку кафедр", "Index", "Cathedras", new {id = @ViewBag.FacId, name = @ViewBag.FacName})
+</p>
 <table class="table">
     <thead>
         <tr>

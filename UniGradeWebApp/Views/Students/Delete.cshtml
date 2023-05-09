@@ -35,5 +35,6 @@
         <input type="hidden" asp-for="StnId" />
         <input type="submit" value="Видалити" class="btn btn-danger" /> |
         @Html.ActionLink("Назад до студентів групи", "Index", new {id = @ViewBag.GrpId, name = @ViewBag.GrpName})
+        <h5 class="text-danger">@ViewBag.ErrMessage</h5>
     </form>
 </div>

@@ -19,12 +19,15 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Grades
-        public async Task<IActionResult> Index(int? id, string? name)
+        public async Task<IActionResult> Index(int? id, string? name, int? grpid, string? grpname, short? grpenrollmentyear)
         {
             if (id == null)
                 return RedirectToAction("Students", "Index");
             ViewBag.StnId = id;
             ViewBag.StnFullName = name;
+            ViewBag.GrpId = grpid;
+            ViewBag.GrpName = grpname;
+            ViewBag.GrpEnrollmentYear = grpenrollmentyear;
             //var dbUniGradeSystemContext = _context.Grades.Include(g => g.GrdSbjNavigation).Include(g => g.GrdStnNavigation);
             var gradesByStudents = _context.Grades.Where(g => g.GrdStn == id).Include(g => g.GrdStnNavigation).Include(g => g.GrdSbjNavigation);
             return View(await gradesByStudents.ToListAsync());

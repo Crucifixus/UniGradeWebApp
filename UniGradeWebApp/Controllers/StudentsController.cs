@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using UniGradeWebApp;
 
 namespace UniGradeWebApp.Controllers
@@ -20,13 +21,15 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index(int? id, string? name, short? enrollmentyear)
+        public async Task<IActionResult> Index(int? id, string? name, short? enrollmentyear, int? cathid, string? cathname)
         {
             if (id == null)
                 return RedirectToAction("Groups", "Index");
             ViewBag.GrpId = id;
             ViewBag.GrpName = name;
             ViewBag.GrpEnrollmentYear = enrollmentyear;
+            ViewBag.CathId = cathid;
+            ViewBag.CathName = cathname;
             //var dbUniGradeSystemContext = _context.Students.Include(s => s.StnGrpNavigation);
             var studentsByGroup = _context.Students.Where(s => s.StnGrp == id).Include(s => s.StnGrpNavigation);
             return View(await studentsByGroup.ToListAsync());
@@ -48,11 +51,10 @@ namespace UniGradeWebApp.Controllers
                 return NotFound();
             }
 
-            //return View(student);
             ViewBag.GrpId = student.StnGrp;
             ViewBag.GrpName = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpName;
             ViewBag.GrpEnrollmentYear = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpEnrollmentYear;
-            return RedirectToAction("Index", "Grades", new {id = student.StnId, name = student.StnFullName});
+            return RedirectToAction("Index", "Grades", new {id = student.StnId, name = student.StnFullName, grpid = student.StnGrpNavigation.GrpId, grpname = student.StnGrpNavigation.GrpName });
         }
 
         // GET: Students/Create
@@ -174,14 +176,21 @@ namespace UniGradeWebApp.Controllers
             {
                 return Problem("Entity set 'DbUniGradeSystemContext.Students'  is null.");
             }
-            var student = await _context.Students.FindAsync(id);
-            if (student != null)
+            var student = await _context.Students
+                .Include(s => s.Grades)
+                .FirstOrDefaultAsync(s => s.StnId == id);
+            if (student != null
+                && (student.Grades == null || student.Grades.Count == 0))
             {
                 _context.Students.Remove(student);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewBag.ErrMessage = "Елемент не повинен мати дочірніх.";
+            ViewBag.GrpId = student.StnGrp;
+            ViewBag.GrpName = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpName;
+            ViewBag.GrpEnrollmentYear = _context.Groups.Where(f => f.GrpId == student.StnGrp).FirstOrDefault().GrpEnrollmentYear;
+            return View(student);
         }
 
         private bool StudentExists(int id)

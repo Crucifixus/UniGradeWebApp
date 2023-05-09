@@ -7,8 +7,10 @@
 <h1>Групи за кафедрою @ViewBag.CathName </h1>
 
 <p>
-    @*<a asp-action="Create" asp-route-id="@ViewBag.CathId">Додати нову групу</a>*@
     @Html.ActionLink("Додати нову групу", "Create", new {CathId = @ViewBag.CathId})
+</p>
+<p>
+    @Html.ActionLink("Повернутись до списку кафедр", "Index", "Cathedras", new {id = @ViewBag.FacId, name = @ViewBag.FacName})
 </p>
 <table class="table">
     <thead>
@@ -40,3 +42,28 @@
 }
     </tbody>
 </table>
+
+<div class="container">
+    <div id="chart2"></div>
+</div>
+@section scripts{
+    <script type "text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            $.get('/api/Chart/JsonGroupGradeData', { CathId : @ViewBag.CathId}, function (JsonGroupGradeData) {
+                data = google.visualization.arrayToDataTable(JsonGroupGradeData, false);
+                var option = {
+                    title: "Співвідношення груп по середніх балах",
+                    width: 500,
+                    height: 400
+                };
+                chart = new google.visualization.PieChart(document.getElementById('chart2'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+}

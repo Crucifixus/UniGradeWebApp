@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using UniGradeWebApp;
 
 namespace UniGradeWebApp.Controllers
@@ -19,12 +20,14 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Subjects
-        public async Task<IActionResult> Index(int? id, string? name)
+        public async Task<IActionResult> Index(int? id, string? name, int? facid, string? facname)
         {
             if (id == null)
                 return RedirectToAction("Cathedras", "Index");
             ViewBag.CathId = id;
             ViewBag.CathName = name;
+            ViewBag.FacId = facid;
+            ViewBag.FacName = facname;
             //var dbUniGradeSystemContext = _context.Subjects.Include(s => s.SbjCathNavigation);
             var subjectsByCathedra = _context.Subjects.Where(s => s.SbjCath == id).Include(s => s.SbjCathNavigation);
             return View(await subjectsByCathedra.ToListAsync());
@@ -165,14 +168,20 @@ namespace UniGradeWebApp.Controllers
             {
                 return Problem("Entity set 'DbUniGradeSystemContext.Subjects'  is null.");
             }
-            var subject = await _context.Subjects.FindAsync(id);
-            if (subject != null)
+            var subject = await _context.Subjects
+                .Include(s => s.Grades)
+                .FirstOrDefaultAsync(s => s.SbjId == id);
+            if (subject != null
+                && (subject.Grades == null || subject.Grades.Count == 0))
             {
                 _context.Subjects.Remove(subject);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewBag.ErrMessage = "Елемент не повинен мати дочірніх.";
+            ViewBag.CathId = subject.SbjCath;
+            ViewBag.CathName = _context.Cathedras.Where(f => f.CathId == subject.SbjCath).FirstOrDefault().CathName;
+            return View(subject);
         }
 
         private bool SubjectExists(int id)

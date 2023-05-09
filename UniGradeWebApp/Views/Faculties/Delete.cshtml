@@ -29,5 +29,6 @@
         <input type="hidden" asp-for="FacId" />
         <input type="submit" value="Видалити" class="btn btn-danger" /> |
         <a asp-action="Index">Назад до списку факультетів</a>
+        <h5 class="text-danger">@ViewBag.ErrMessage</h5>
     </form>
 </div>

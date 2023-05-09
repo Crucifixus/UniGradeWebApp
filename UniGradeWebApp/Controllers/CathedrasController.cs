@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using UniGradeWebApp;
 
 namespace UniGradeWebApp.Controllers
@@ -20,14 +21,12 @@ namespace UniGradeWebApp.Controllers
         }
 
         // GET: Cathedras
-        public async Task<IActionResult> Index(int? id, string? name, Int16? foundingyear)
+        public async Task<IActionResult> Index(int? id, string? name)
         {
             if (id == null) 
                 return RedirectToAction("Faculties", "Index");
             ViewBag.FacId = id;
             ViewBag.FacName = name;
-            ViewBag.FacFoundingYear = foundingyear;
-            //var dbUniGradeSystemContext = _context.Cathedras.Include(c => c.CathFacNavigation);
             var cathedrasByFaculty = _context.Cathedras.Where(c => c.CathFac == id).Include(c => c.CathFacNavigation);
 
             return View(await cathedrasByFaculty.ToListAsync());
@@ -48,13 +47,9 @@ namespace UniGradeWebApp.Controllers
             {
                 return NotFound();
             }
-
-            //return View(cathedra);
-            //return RedirectToAction("Index", "Subjects", new { CathId = cathedra.CathId, CathName = cathedra.CathName });
-            //How to do 2 redirects? answ, you don't, you make 2 buttons TODO: make a second list, which would be of subjects instead of groups
             ViewBag.FacId = cathedra.CathFac;
             ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
-            return RedirectToAction("Index", "Groups", new { id = cathedra.CathId, name = cathedra.CathName });
+            return RedirectToAction("Index", "Groups", new { id = cathedra.CathId, name = cathedra.CathName, facid = cathedra.CathFacNavigation.FacId, facname = cathedra.CathFacNavigation.FacName });
         }
 
         // GET: Cathedras/Details2/5
@@ -73,17 +68,14 @@ namespace UniGradeWebApp.Controllers
                 return NotFound();
             }
 
-            //return View(cathedra);
             ViewBag.FacId = cathedra.CathFac;
             ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
-            return RedirectToAction("Index", "Subjects", new { id = cathedra.CathId, name = cathedra.CathName });
-            //return RedirectToAction("Index", "Groups", new { id = cathedra.CathId, name = cathedra.CathName });
+            return RedirectToAction("Index", "Subjects", new { id = cathedra.CathId, name = cathedra.CathName, facid = cathedra.CathFacNavigation.FacId, facname = cathedra.CathFacNavigation.FacName });
         }
 
         // GET: Cathedras/Create
         public IActionResult Create(int FacId)
         {
-            //ViewData["FacId"] = new SelectList(_context.Faculties, "FacId", "FacId");
             ViewBag.FacId = FacId;
             ViewBag.Faculty = _context.Faculties.Where(f => f.FacId == FacId).FirstOrDefault();
             ViewBag.FacName = ViewBag.Faculty.FacName;
@@ -109,7 +101,6 @@ namespace UniGradeWebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Cathedras", new { id = FacId, name = fac.FacName, foundingyear = fac.FacFoundingYear } );
             }
-            //ViewData["FacId"] = new SelectList(_context.Faculties, "FacId", "FacId", cathedra.FacId);
             return View(cathedra);           
         }
 
@@ -199,14 +190,22 @@ namespace UniGradeWebApp.Controllers
             {
                 return Problem("Entity set 'DbUniGradeSystemContext.Cathedras'  is null.");
             }
-            var cathedra = await _context.Cathedras.FindAsync(id);
-            if (cathedra != null)
+            var cathedra = await _context.Cathedras
+                .Include(c => c.Groups)
+                .Include(c => c.Subjects)
+                .FirstOrDefaultAsync(m => m.CathId == id);
+            if (cathedra != null 
+                && (cathedra.Groups == null || cathedra.Groups.Count == 0)
+                && (cathedra.Subjects == null || cathedra.Subjects.Count == 0))
             {
                 _context.Cathedras.Remove(cathedra);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewBag.ErrMessage = "Елемент не повинен мати дочірніх.";
+            ViewBag.FacId = cathedra.CathFac;
+            ViewBag.FacName = _context.Faculties.Where(f => f.FacId == cathedra.CathFac).FirstOrDefault().FacName;
+            return View(cathedra);
         }
 
         private bool CathedraExists(int id)

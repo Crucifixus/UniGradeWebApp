@@ -7,8 +7,10 @@
 <h1>Студенти за групою @ViewBag.GrpName, @ViewBag.GrpEnrollmentYear року</h1>
 
 <p>
-    @*<a asp-action="Create" asp-route-id="@ViewBag.GrpId">Додати нового студента</a>*@
     @Html.ActionLink("Додати нового студента", "Create", new {GrpId = @ViewBag.GrpId})
+</p>
+<p>
+    @Html.ActionLink("Повернутись до списку групу", "Index", "Groups", new {id = @ViewBag.GrpId, name = @ViewBag.GrpName, enrollmentyear = ViewBag.GrpEnrollmentYear})
 </p>
 <table class="table">
     <thead>

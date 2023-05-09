@@ -5,10 +5,13 @@
 }
 
 <h1>Бали студента @ViewBag.StnFullName</h1>
+<h3>Середній бал = @Model.Select(m => m.GrdResult)?.Average(GrdResult => GrdResult)</h3>
 
 <p>
-    @*<a asp-action="Create" asp-route-id="@ViewBag.StnId">Додати новий бал</a>*@
     @Html.ActionLink("Додати новий бал", "Create", new {StnId = @ViewBag.StnId})
+</p>
+<p>
+    @Html.ActionLink("Повернутись до списку студентів", "Index", "Students", new {id = @ViewBag.GrpId, name = @ViewBag.GrpName, enrollmentyear = @ViewBag.GrpEnrollmentYear})
 </p>
 <table class="table">
     <thead>
@@ -39,3 +42,28 @@
 }
     </tbody>
 </table>
+
+<div class="container">
+    <div id="chart3"></div>
+</div>
+@section scripts{
+    <script type "text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            $.get('/api/Chart/JsonStudentGradeData', { StnId : @ViewBag.StnId}, function (JsonStudentGradeData) {
+                data = google.visualization.arrayToDataTable(JsonStudentGradeData, false);
+                var option = {
+                    title: "Співвідношення балів по предметаx",
+                    width: 500,
+                    height: 400
+                };
+                chart = new google.visualization.ColumnChart(document.getElementById('chart3'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+}

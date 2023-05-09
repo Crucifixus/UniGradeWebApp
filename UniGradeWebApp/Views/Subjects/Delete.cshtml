@@ -35,5 +35,6 @@
         <input type="hidden" asp-for="SbjId" />
         <input type="submit" value="Видалити" class="btn btn-danger" /> |
         @Html.ActionLink("Назад до дисциплін кафедри", "Index", new {id = @ViewBag.CathId, name = @ViewBag.CathName})
+        <h5 class="text-danger">@ViewBag.ErrMessage</h5>
     </form>
 </div>
